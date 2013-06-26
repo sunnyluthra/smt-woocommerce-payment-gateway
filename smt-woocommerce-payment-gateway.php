@@ -183,12 +183,12 @@ Author URI: http://www.mrova.com/
 			  <input type="hidden" name="Montant" value="{$total}" />
 			  <input type="hidden" name="sid" value="{$session_id}" />
 			*/
-		  $smt_args = array(
-		  	'affilie' => $this->affilie,
-		  	'currency' => get_woocommerce_currency(),
-		  	'reference' => $order_id,
-		  	'total' => $order->order_total,
-		  	'session_id' => '');
+		   $smt_args = array(
+              'affilie' => $this->affilie,
+              'devise' => 'TND', // TND = Tunisian Dinar (which is the tunisian currency
+              'reference' => $order_id,
+              'montant' => number_format($order->order_total, 3, '.', ''),
+              'sid' => $order_id); // this is the session ID 
 
 		$smt_args_array = array();
 		foreach($smt as $key => $value){
@@ -197,30 +197,7 @@ Author URI: http://www.mrova.com/
 		return '<form action="'.$this -> liveurl.'" method="post" id="smt_payment_form">
 		' . implode('', $smt_args_array) . '
 		<input type="submit" class="button-alt" id="submit_smt_payment_form" value="'.__('Pay via smt', 'mrova').'" /> <a class="button cancel" href="'.$order->get_cancel_order_url().'">'.__('Cancel order &amp; restore cart', 'mrova').'</a>
-		<script type="text/javascript">
-		jQuery(function(){
-			jQuery("body").block(
-			{
-				message: "<img src=\"'.$woocommerce->plugin_url().'/assets/images/ajax-loader.gif\" alt=\"Redirecting…\" style=\"float:left; margin-right: 10px;\" />'.__('Thank you for your order. We are now redirecting you to smt to make payment.', 'mrova').'",
-				overlayCSS:
-				{
-					background: "#fff",
-					opacity: 0.6
-				},
-				css: {
-					padding:        20,
-					textAlign:      "center",
-					color:          "#555",
-					border:         "3px solid #aaa",
-					backgroundColor:"#fff",
-					cursor:         "wait",
-					lineHeight:"32px"
-				}
-			});
-		jQuery("#submit_smt_payment_form").click();
-
-		});
-		</script>
+		
 		</form>';
 
 
